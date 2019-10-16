@@ -4,18 +4,19 @@ from keras.layers import Dense, InputLayer
 import matplotlib.pylab as plt
 class nchain:
     def __init__(self):
-        self.state = 1
+        self.state = 0
         self.reward = 0
         self.stop = 100
         self.counter = 0
         self.done = False
     def DO(self,action):
-        if action == 1 and self.state <5:
+        if action == 1 and self.state <4:
             self.state += 1
             self.reward +=0
-        elif action == 1 and self.state == 5:
-            self.state = 5
+        elif action == 1 and self.state == 4:
+            self.state = 4
             self.reward += 10
+            #print('here')
         elif action == 0:
             self.state = 1
             self.reward +=2
@@ -23,17 +24,18 @@ class nchain:
             print('error')
         if self.counter == self.stop:
             self.done = True
+            #print('done')
         self.counter += 1
         return self.state, self.reward, self.done
     def reset(self):
-        self.state = 1
+        self.state = 0
         self.reward = 0
         self.stop = 100
         self.counter = 0
         self.done = False
         return self.state
 
-def q_learning_keras(env, num_episodes=100):
+def q_learning_keras(env, num_episodes=1000):
     # create the keras model
     model = Sequential()
     model.add(InputLayer(batch_input_shape=(1, 5)))
@@ -58,7 +60,7 @@ def q_learning_keras(env, num_episodes=100):
             else:
                 a = np.argmax(model.predict(np.identity(5)[s:s + 1]))
             new_s, r, done = env.DO(a)
-            print(np.identity(5)[new_s:new_s + 1])
+            #print(np.identity(5)[new_s:new_s + 1],a)
             target = r + y * np.amax(model.predict(np.identity(5)[new_s:new_s + 1]))
             target_vec = model.predict(np.identity(5)[s:s + 1])[0]
             target_vec[a] = target
@@ -74,4 +76,5 @@ def q_learning_keras(env, num_episodes=100):
         print("State {} - action {}".format(i, model.predict(np.identity(5)[i:i + 1])))
 
 env = nchain()
-q_learning_keras(env)         
+q_learning_keras(env)
+
