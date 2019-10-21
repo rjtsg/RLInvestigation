@@ -7,19 +7,19 @@ class sinoid:
     def __init__(self):
         self.state = 0
         self.reward = 0
-        self.stop = 248
+        self.stop = 48
         self.counter = 0
-        self.cash = 25
+        self.cash = 500
         self.stock = 0
-        self.t = np.arange(0,250)
+        self.t = np.arange(0,50)
         self.done = False
         self.NetWorthOld = self.cash
     def DO(self,action):
-        StockWorth = np.sin(2*np.pi*self.t[self.state+1]/self.t[self.state+1])
-        if action == 0 and self.cash > np.sin(2*np.pi*StockWorth/StockWorth): #buying
+        StockWorth = 30*np.sin(4*np.pi*self.t[self.state+1]/self.t[-1]) + 30
+        if action == 0 and self.cash > StockWorth: #buying
             self.cash -= StockWorth
             self.stock += 1
-            self.reward += (self.cash + self.stock*StockWorth) - self.NetWorthOld 
+            self.reward += (self.cash + self.stock*StockWorth) - self.NetWorthOld
         elif action == 1 and self.stock > 0: #selling
             self.stock -= 1
             self.cash += StockWorth
@@ -33,19 +33,27 @@ class sinoid:
             self.done = True
             #print('done')
         self.counter += 1
+        self.NetWorthOld = self.cash + self.stock*StockWorth
         # print(self.counter)
+        # print(action, self.reward, self.cash, self.stock,self.t[self.state])
         return self.state, self.reward, self.done
     def reset(self):
         self.__init__()
         return self.state
+    def results(self):
+        print('The agents cash at the end of the game is: {}'.format(self.cash))
+        print('The agents stock at the end of the game is: {}'.format(self.stock))
+        print('The agents NetWorth at the end of the game is: {}'.format(self.NetWorthOld))
+
 
 def q_learning_keras(env, num_episodes=1000):
     # create the keras model
-    states = 250
+    states = 50
     actions = 3
     model = Sequential()
     model.add(InputLayer(batch_input_shape=(1, states)))
-    model.add(Dense(10, activation='sigmoid'))
+    model.add(Dense(200, activation='sigmoid'))
+    model.add(Dense(200, activation='sigmoid'))
     model.add(Dense(actions, activation='linear'))
     model.compile(loss='mse', optimizer='adam', metrics=['mae'])
     # now execute the q learning
@@ -80,11 +88,12 @@ def q_learning_keras(env, num_episodes=1000):
     plt.show()
     for i in range(states):
         print("State {} - action {}".format(i, model.predict(np.identity(states)[i:i + 1])))
+    return r_sum
 
-#t = np.arange(0,250)
-#plt.plot(t,np.sin(2*np.pi*t/t[-1]))
-#plt.show()
+t = np.arange(0,50)
+plt.plot(t,30*np.sin(4*np.pi*t/t[-1])+30)
+plt.show()
 
 env = sinoid()
-q_learning_keras(env)
-
+r = q_learning_keras(env,2000)
+env.results()
