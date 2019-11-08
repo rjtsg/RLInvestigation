@@ -24,7 +24,7 @@ class nchain:
         elif action == 1: #sell
             self.reward1 = EvalFunc(self.state) - EvalFunc((self.state+1))
         elif action == 2:
-            pass
+            self.reward1 = 0
         else:
             print('error')
         # print(self.reward1)
