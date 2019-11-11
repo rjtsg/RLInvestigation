@@ -13,13 +13,14 @@ class nchain:
         self.done = False
         self.reward1 = 0
         self.y = 1
-
+        self.gradient = 0
     def DO(self,action):
         def EvalFunc(x):
             # return (x-3)**4-6*(x-3)**2-12*(x-3)+35
             return (np.sin(x/20*2*np.pi)+1)
         remember = EvalFunc(self.state)
         self.y = EvalFunc(self.state)
+        self.gradient = EvalFunc((self.state+1)) - EvalFunc(self.state)
         if action == 0: #buy
             self.reward1 = EvalFunc((self.state+1)) - EvalFunc(self.state)
         elif action == 1: #sell
@@ -42,7 +43,7 @@ class nchain:
         
         # return self.state, self.reward, self.done, remember
         # return self.y, self.done
-        return np.array([self.state, self.y]) , self.reward1, self.done
+        return np.array([self.gradient, self.y]) , self.reward1, self.done
         
     def reset(self):
         self.state = 0
@@ -52,7 +53,8 @@ class nchain:
         self.done = False
         self.reward1 = 0
         self.y = 1
-        return np.array([self.state, self.y])
+        self.gradient
+        return np.array([self.gradient, self.y])
 
 def q_learning_keras(env, num_episodes=1000):
     # create the keras model
