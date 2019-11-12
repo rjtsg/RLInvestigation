@@ -20,9 +20,7 @@ class nchain:
         self.reward2 = 0
     def DO(self,action):
         def EvalFunc(x):
-            # return (x-3)**4-6*(x-3)**2-12*(x-3)+35
             return (np.sin(x/20*2*np.pi)+1)
-        # remember = EvalFunc(self.state)
         punish = 0
         NetWorthOld = self.cash + self.stock*EvalFunc(self.state)
         self.y = EvalFunc(self.state)
@@ -42,24 +40,13 @@ class nchain:
             
         else:
             print('error')
-        # print(self.reward1)
-        # self.reward1 = self.reward1*2
         
         self.state += 1
         self.reward2 = ((self.cash + self.stock*EvalFunc(self.state)) - NetWorthOld) + punish
         if self.state == 41:
             self.done = True
             
-            # if self.reward1 >= :
-            #     self.reward = 10
-            # else:
-            #     self.reward = 0
-
-        
-        # return self.state, self.reward, self.done, remember
-        # return self.y, self.done
         return np.array([self.gradient, self.y, self.cash, self.stock]) , self.reward2, self.done
-        # return self.cash, self.stock, self.done, self.reward2
         
     def reset(self):
         self.state = 0
@@ -118,9 +105,12 @@ def q_learning_keras(env, num_episodes=2000):
     plt.xlabel('Number of games')
     plt.show()
     return model
-env = nchain()
-model = q_learning_keras(env,2000)
 
+#Creating the environment
+env = nchain()
+#Start the learning of the model
+model = q_learning_keras(env,2000)
+#Using the model to show how it works:
 CASH = []
 STOCK = []
 NETWORTH = []
@@ -129,8 +119,6 @@ ACTION = []
 done = False
 s = env.reset()
 while not done:
-    # new_s, r, done, remember = env.DO(0)
-    # remember, done = env.DO(0)
     ACTION.append(np.argmax(model.predict(np.array([s]))))
     s, r, done = env.DO(np.argmax(model.predict(np.array([s]))))
     NETWORTH.append(env.result())
