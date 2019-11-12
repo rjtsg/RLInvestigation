@@ -7,11 +7,7 @@ class nchain:
 
     def __init__(self):
         self.state = 0
-        self.reward = 0
-        self.stop = 100
-        self.counter = 0
         self.done = False
-        self.reward1 = 0
         self.y = 1
         self.gradient = 0
         self.cash = 5
@@ -26,21 +22,17 @@ class nchain:
         self.y = EvalFunc(self.state)
         self.gradient = EvalFunc((self.state+1)) - EvalFunc(self.state)
         if action == 0 and self.cash > EvalFunc(self.state): #buy
-            self.reward1 = EvalFunc((self.state+1)) - EvalFunc(self.state)
             self.stock += 1
             self.cash -= EvalFunc(self.state)
         elif action == 1 and self.stock > 0: #sell
-            self.reward1 = EvalFunc(self.state) - EvalFunc((self.state+1))
             self.stock -= 1
             self.cash += EvalFunc(self.state)
         elif action == 2 or self.cash <= EvalFunc(self.state) or self.stock <= 0:
             self.reward1 = 0
             if action != 2:
                 punish = -1
-            
         else:
             print('error')
-        
         self.state += 1
         self.reward2 = ((self.cash + self.stock*EvalFunc(self.state)) - NetWorthOld) + punish
         if self.state == 41:
@@ -50,11 +42,7 @@ class nchain:
         
     def reset(self):
         self.state = 0
-        self.reward = 0
-        self.stop = 100
-        self.counter = 0
         self.done = False
-        self.reward1 = 0
         self.reward2 = 0
         self.y = 1
         self.gradient = 0
@@ -63,7 +51,6 @@ class nchain:
         return np.array([self.gradient, self.y, self.cash, self.stock])
     def result(self):
         def EvalFunc(x):
-            # return (x-3)**4-6*(x-3)**2-12*(x-3)+35
             return (np.sin(x/20*2*np.pi)+1)
         return self.cash + self.stock*EvalFunc(self.state)
 
@@ -81,7 +68,6 @@ def q_learning_keras(env, num_episodes=2000):
     r_avg_list = []
     for i in range(num_episodes):
         s = env.reset()
-        # print(np.shape(s))
         eps *= decay_factor
         if i % 10 == 0:
             print("Episode {} of {}".format(i + 1, num_episodes))
@@ -109,7 +95,7 @@ def q_learning_keras(env, num_episodes=2000):
 #Creating the environment
 env = nchain()
 #Start the learning of the model
-model = q_learning_keras(env,2000)
+model = q_learning_keras(env,5000)
 #Using the model to show how it works:
 CASH = []
 STOCK = []
@@ -129,8 +115,9 @@ print(env.result())
 plt.plot(CASH)
 plt.plot(REWARD)
 plt.plot(NETWORTH)
-plt.legend(['cash','reward','net worth'])
+plt.plot(ACTION)
+plt.legend(['cash','reward','net worth','action'])
 plt.show()
 plt.plot(STOCK)
 plt.show()
-print(ACTION)
+
