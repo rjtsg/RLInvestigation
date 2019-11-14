@@ -12,11 +12,11 @@ class nchain:
         self.counter = 0
         self.done = False
     def DO(self,action):
-        #remember = np.sin(self.state*2*np.pi/20)
+        remember = np.sin(self.state*2*np.pi/20)+1
         if action == 0: #buy
-            self.reward = np.sin((self.state+1)*2*np.pi/20) - np.sin(self.state*2*np.pi/20)
+            self.reward = np.sin((self.state+1)*2*np.pi/20)+1 - np.sin(self.state*2*np.pi/20)+1
         elif action == 1: #sell
-            self.reward = np.sin(self.state*2*np.pi/20) - ((self.state+1)*2*np.pi/20)
+            self.reward = np.sin(self.state*2*np.pi/20)+1 - ((self.state+1)*2*np.pi/20)+1
         else:
             print('error')
         self.state += 1

@@ -46,7 +46,7 @@ class sinoid:
         print('The agents NetWorth at the end of the game is: {}'.format(self.NetWorthOld))
 
 
-def q_learning_keras(env, num_episodes=1000):
+def q_learning_keras(env, num_episodes=100):
     # create the keras model
     states = 50
     actions = 3
@@ -73,6 +73,8 @@ def q_learning_keras(env, num_episodes=1000):
                 a = np.random.randint(0, actions)
             else:
                 a = np.argmax(model.predict(np.identity(states)[s:s + 1]))
+            if i > 2600:
+                a = np.argmax(model.predict(np.identity(states)[s:s + 1]))
             new_s, r, done = env.DO(a)
             #print(np.identity(5)[new_s:new_s + 1],a)
             target = r + y * np.amax(model.predict(np.identity(states)[new_s:new_s + 1]))
@@ -88,12 +90,15 @@ def q_learning_keras(env, num_episodes=1000):
     plt.show()
     for i in range(states):
         print("State {} - action {}".format(i, model.predict(np.identity(states)[i:i + 1])))
-    return r_sum
-
-t = np.arange(0,50)
-plt.plot(t,30*np.sin(4*np.pi*t/t[-1])+30)
-plt.show()
-
+    return r_sum, model
 env = sinoid()
-r = q_learning_keras(env,2000)
+r, model = q_learning_keras(env,3000)
+env.results()
+
+done = False
+s = env.reset()
+states = 50
+while not done:
+    a = np.argmax(model.predict(np.identity(states)[s:s + 1]))
+    s, r, done = env.DO(a)
 env.results()
