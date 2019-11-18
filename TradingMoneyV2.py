@@ -4,20 +4,34 @@ from keras.layers import Dense, InputLayer
 import matplotlib.pylab as plt
 import pandas as pd 
 
-class nchain:
+#Pick a certain year of the AXP to train on
+df = pd.read_excel('AXPData.xlsx')
+df1 = pd.DataFrame(data=None, columns=df.columns)
+counter = 0
+for i in range(len(df)):
+    datecheck = str(df.Date[i])
+    if datecheck[0:4] == '2005':
+        df1.loc[datecheck] = df.iloc[i]
+df1 = df1.iloc[::-1]
 
-    def __init__(self):
+#plt.plot(df1['Close'])
+#plt.show()
+
+class nchain:
+    def __init__(
+        self):
         self.state = 0
         self.done = False
-        self.y = 1
+        self.y = df1['Close'][0]
         self.gradient = 0
-        self.cash = 5
+        self.cash = 5*40
         self.NetWorth = self.cash
         self.stock = 0
         self.reward2 = 0
     def DO(self,action):
         def EvalFunc(x):
-            return (np.sin(x/20*2*np.pi)+1)
+            #return (np.sin(x/20*2*np.pi)+1)
+            return df1['Close'][self.state]
         punish = 0
         NetWorthOld = self.cash + self.stock*EvalFunc(self.state)
         self.y = EvalFunc(self.state)
@@ -36,7 +50,7 @@ class nchain:
             print('error')
         self.state += 1
         self.reward2 = ((self.cash + self.stock*EvalFunc(self.state)) - NetWorthOld) + punish
-        if self.state == 21:
+        if self.state == 251:
             self.done = True
             
         return np.array([self.gradient, self.y, self.cash, self.stock]) , self.reward2, self.done
@@ -45,14 +59,15 @@ class nchain:
         self.state = 0
         self.done = False
         self.reward2 = 0
-        self.y = 1 
+        self.y = df1['Close'][0] 
         self.gradient = 0
-        self.cash = 5
+        self.cash = 5*40
         self.stock = 0
         return np.array([self.gradient, self.y, self.cash, self.stock])
     def result(self):
         def EvalFunc(x):
-            return (np.sin(x/20*2*np.pi)+1)
+            #return (np.sin(x/20*2*np.pi)+1)
+            return df1['Close'][self.state]
         return self.cash + self.stock*EvalFunc(self.state-1)
 
 def q_learning_keras(env, num_episodes=2000):
@@ -96,7 +111,7 @@ def q_learning_keras(env, num_episodes=2000):
 #Creating the environment
 env = nchain()
 #Start the learning of the model
-model = q_learning_keras(env,5000)
+model = q_learning_keras(env,1000)
 #Using the model to show how it works:
 CASH = []
 STOCK = []
