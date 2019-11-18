@@ -79,6 +79,8 @@ def q_learning_keras(env, num_episodes=1000):
             target = r + y * np.amax(model.predict(np.identity(22)[new_s:new_s + 1]))
             target_vec = model.predict(np.identity(22)[s:s + 1])[0]
             target_vec[a] = target
+            print(target_vec)
+            print(np.identity(22)[s:s + 1])
             model.fit(np.identity(22)[s:s + 1], target_vec.reshape(-1, 3), epochs=1, verbose=0)
             s = new_s
             r_sum += r
@@ -91,7 +93,7 @@ def q_learning_keras(env, num_episodes=1000):
         print("State {} - action {}".format(i, model.predict(np.identity(22)[i:i + 1])))
 
 env = nchain()
-q_learning_keras(env,2000)
+q_learning_keras(env,2)
 
 # testList = []
 # done = False

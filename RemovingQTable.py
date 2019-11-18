@@ -82,11 +82,8 @@ def q_learning_keras(env, num_episodes=1000):
             else:
                 a = np.argmax(model.predict(np.array([s])))
             new_s, r, done = env.DO(a)
-            #print(np.identity(5)[new_s:new_s + 1],a)
-            # print(np.shape(new_s))
             target = r + y * np.amax(model.predict(np.array([new_s])))
             target_vec = model.predict(np.array([s]))[0]
-            # print(a, target_vec,np.array([s]))
             target_vec[a] = target
             model.fit(np.array([s]), target_vec.reshape(-1, 3), epochs=1, verbose=0)
             s = new_s
@@ -96,9 +93,7 @@ def q_learning_keras(env, num_episodes=1000):
     plt.ylabel('Average reward per game')
     plt.xlabel('Number of games')
     plt.show()
-    # for i in range(22):
-        # print("State {} - action {}".format(i, model.predict(np.identity(22)[i:i + 1])))
-
+    
 env = nchain()
 q_learning_keras(env,2000)
 
