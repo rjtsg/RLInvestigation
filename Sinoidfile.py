@@ -74,6 +74,8 @@ def q_learning_keras(env, num_episodes=2500):
                 a = np.random.randint(0, actions)
             else:
                 a = np.argmax(model.predict(np.identity(states)[s:s + 1]))
+            if i > 2600:
+                a = np.argmax(model.predict(np.identity(states)[s:s + 1]))
             new_s, r, done = env.DO(a)
             #print(np.identity(5)[new_s:new_s + 1],a)
             target = r + y * np.amax(model.predict(np.identity(states)[new_s:new_s + 1]))# - np.amax(model.predict(np.identity(states)[s:s+1]))

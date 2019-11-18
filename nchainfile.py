@@ -2,6 +2,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, InputLayer
 import matplotlib.pylab as plt
+
 class nchain:
     def __init__(self):
         self.state = 0
@@ -10,16 +11,12 @@ class nchain:
         self.counter = 0
         self.done = False
     def DO(self,action):
-        if action == 1 and self.state <4:
+        if action == 1:
             self.state += 1
-            self.reward +=0
-        elif action == 1 and self.state == 4:
-            self.state = 4
-            self.reward += 10
-            #print('here')
+            self.reward += abs(x-10)
         elif action == 0:
-            self.state = 1
-            self.reward +=2
+            self.state += 1
+            self.reward += abs(x-10)
         else:
             print('error')
         if self.counter == self.stop:
@@ -38,7 +35,7 @@ class nchain:
 def q_learning_keras(env, num_episodes=1000):
     # create the keras model
     model = Sequential()
-    model.add(InputLayer(batch_input_shape=(1, 5)))
+    model.add(InputLayer(batch_input_shape=(1, 10)))
     model.add(Dense(10, activation='sigmoid'))
     model.add(Dense(2, activation='linear'))
     model.compile(loss='mse', optimizer='adam', metrics=['mae'])
@@ -58,13 +55,13 @@ def q_learning_keras(env, num_episodes=1000):
             if np.random.random() < eps:
                 a = np.random.randint(0, 2)
             else:
-                a = np.argmax(model.predict(np.identity(5)[s:s + 1]))
+                a = np.argmax(model.predict(np.identity(10)[s:s + 1]))
             new_s, r, done = env.DO(a)
             #print(np.identity(5)[new_s:new_s + 1],a)
-            target = r + y * np.amax(model.predict(np.identity(5)[new_s:new_s + 1]))
-            target_vec = model.predict(np.identity(5)[s:s + 1])[0]
+            target = r + y * np.amax(model.predict(np.identity(10)[new_s:new_s + 1]))
+            target_vec = model.predict(np.identity(10)[s:s + 1])[0]
             target_vec[a] = target
-            model.fit(np.identity(5)[s:s + 1], target_vec.reshape(-1, 2), epochs=1, verbose=0)
+            model.fit(np.identity(10)[s:s + 1], target_vec.reshape(-1, 2), epochs=1, verbose=0)
             s = new_s
             r_sum += r
         r_avg_list.append(r_sum / 1000)
@@ -72,8 +69,8 @@ def q_learning_keras(env, num_episodes=1000):
     plt.ylabel('Average reward per game')
     plt.xlabel('Number of games')
     plt.show()
-    for i in range(5):
-        print("State {} - action {}".format(i, model.predict(np.identity(5)[i:i + 1])))
+    for i in range(10):
+        print("State {} - action {}".format(i, model.predict(np.identity(10)[i:i + 1])))
 
 env = nchain()
 q_learning_keras(env,1000)
