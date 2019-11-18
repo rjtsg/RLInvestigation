@@ -76,5 +76,4 @@ def q_learning_keras(env, num_episodes=1000):
         print("State {} - action {}".format(i, model.predict(np.identity(5)[i:i + 1])))
 
 env = nchain()
-q_learning_keras(env)
-
+q_learning_keras(env,1000)
