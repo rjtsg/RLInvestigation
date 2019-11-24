@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 # Time period
 t = np.arange(0, 40, 1)
 # Create a sine wave with multiple frequencies(1 Hz, 2 Hz and 4 Hz)
-a = np.sin(2*np.pi*t/40) + np.sin(2*2*np.pi*t/40)+ 3 + np.sin(4*2*np.pi*t/40)
+a = np.cos(2*np.pi*t/40) + np.cos(2*2*np.pi*t/40)+ 3 + np.cos(4*2*np.pi*t/40) 
+a = np.random.normal(a,0.5)
 # Plot the original sine wave using inverse Fourier transform
 plt.plot(t, a)
 plt.title("Sine wave plotted using inverse Fourier transform")
@@ -40,7 +41,7 @@ class nchain:
         punish = 0
         NetWorthOld = self.cash + self.stock*EvalFunc(self.state)
         self.y = EvalFunc(self.state)
-        self.gradient = EvalFunc((self.state+1)) - EvalFunc(self.state)
+        self.gradient = EvalFunc((self.state)) - EvalFunc(self.state-1)
         if action == 0 and self.cash > EvalFunc(self.state): #buy
             self.stock += 1
             self.cash -= EvalFunc(self.state)
@@ -90,7 +91,7 @@ class nchain2:
     def DO(self,action):
         def EvalFunc(x):
             # return (np.sin(x/20*2*np.pi)+1)
-            return np.sin(2*np.pi*x/40) + np.sin(2*2*np.pi*x/40)+ 3 + np.sin(4*2*np.pi*x/40)
+            return np.cos(2*np.pi*x/40) + np.cos(2*2*np.pi*x/40)+ 3 + np.cos(4*2*np.pi*x/40)
         punish = 0
         NetWorthOld = self.cash + self.stock*EvalFunc(self.state)
         self.y = EvalFunc(self.state)

@@ -13,16 +13,15 @@ for i in range(len(df)):
     if datecheck[0:4] == '2005':
         df1.loc[datecheck] = df.iloc[i]
 df1 = df1.iloc[::-1]
-
-#plt.plot(df1['Close'])
-#plt.show()
+df2 = df1['Close'].iloc[0:51]
+plt.plot(df2)
+plt.show()
 
 class nchain:
-    def __init__(
-        self):
+    def __init__(self):
         self.state = 0
         self.done = False
-        self.y = df1['Close'][0]
+        self.y = df2[0]
         self.gradient = 0
         self.cash = 5*40
         self.NetWorth = self.cash
@@ -31,7 +30,7 @@ class nchain:
     def DO(self,action):
         def EvalFunc(x):
             #return (np.sin(x/20*2*np.pi)+1)
-            return df1['Close'][self.state]
+            return df2[self.state]
         punish = 0
         NetWorthOld = self.cash + self.stock*EvalFunc(self.state)
         self.y = EvalFunc(self.state)
@@ -50,31 +49,31 @@ class nchain:
             print('error')
         self.state += 1
         self.reward2 = ((self.cash + self.stock*EvalFunc(self.state)) - NetWorthOld) + punish
-        if self.state == 251:
+        if self.state == 50:
             self.done = True
             
-        return np.array([self.gradient, self.y, self.cash, self.stock]) , self.reward2, self.done
+        return np.array([self.state, self.y, self.cash, self.stock]) , self.reward2, self.done
         
     def reset(self):
         self.state = 0
         self.done = False
         self.reward2 = 0
-        self.y = df1['Close'][0] 
+        self.y = df2[0] 
         self.gradient = 0
         self.cash = 5*40
         self.stock = 0
-        return np.array([self.gradient, self.y, self.cash, self.stock])
+        return np.array([self.state, self.y, self.cash, self.stock])
     def result(self):
         def EvalFunc(x):
             #return (np.sin(x/20*2*np.pi)+1)
-            return df1['Close'][self.state]
+            return df2[self.state]
         return self.cash + self.stock*EvalFunc(self.state-1)
 
 def q_learning_keras(env, num_episodes=2000):
     # create the keras model
     model = Sequential()
     model.add(InputLayer(batch_input_shape=(1, 4)))
-    model.add(Dense(30, activation='sigmoid'))
+    model.add(Dense(50, activation='sigmoid'))
     model.add(Dense(3, activation='linear'))
     model.compile(loss='mse', optimizer='adam', metrics=['mae'])
     # now execute the q learning
@@ -111,7 +110,7 @@ def q_learning_keras(env, num_episodes=2000):
 #Creating the environment
 env = nchain()
 #Start the learning of the model
-model = q_learning_keras(env,1000)
+model = q_learning_keras(env,5000)
 #Using the model to show how it works:
 CASH = []
 STOCK = []
