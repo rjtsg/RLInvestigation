@@ -1,37 +1,43 @@
 import numpy as np
+
+import matplotlib.pyplot as plt
+
+ 
+
+# Time period
+t = np.arange(0, 40, 1)
+# Create a sine wave with multiple frequencies(1 Hz, 2 Hz and 4 Hz)
+a = np.sin(2*np.pi*t/40) + np.sin(2*2*np.pi*t/40)+2
+a = np.random.normal(a,0.5)
+# Plot the original sine wave using inverse Fourier transform
+plt.plot(t, a)
+plt.title("Sine wave plotted using inverse Fourier transform")
+plt.xlabel('Time')
+plt.ylabel('Amplitude')
+plt.grid(True)
+plt.show()
+
+import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, InputLayer
 import matplotlib.pylab as plt
 import pandas as pd 
-import os
-print(os.getcwd())
-#Pick a certain year of the AXP to train on
-df = pd.read_excel('AXPData.xlsx')
-df1 = pd.DataFrame(data=None, columns=df.columns)
-counter = 0
-for i in range(len(df)):
-    datecheck = str(df.Date[i])
-    if datecheck[0:4] == '2005':
-        df1.loc[datecheck] = df.iloc[i]
-df1 = df1.iloc[::-1]
-df2 = df1['Close'].iloc[0:51]
-plt.plot(df2)
-plt.show()
 
-class nchain:
+class nchain2:
+
     def __init__(self):
         self.state = 0
         self.done = False
-        self.y = df2[0]
+        self.y = 1
         self.gradient = 0
-        self.cash = 5*40
+        self.cash = 5
         self.NetWorth = self.cash
         self.stock = 0
         self.reward2 = 0
     def DO(self,action):
         def EvalFunc(x):
-            #return (np.sin(x/20*2*np.pi)+1)
-            return df2[self.state]
+            # return (np.sin(x/20*2*np.pi)+1)
+            return np.cos(2*np.pi*x/40) + np.cos(2*2*np.pi*x/40)+ 3 + np.cos(4*2*np.pi*x/40)
         punish = 0
         NetWorthOld = self.cash + self.stock*EvalFunc(self.state)
         self.y = EvalFunc(self.state)
@@ -50,24 +56,76 @@ class nchain:
             print('error')
         self.state += 1
         self.reward2 = ((self.cash + self.stock*EvalFunc(self.state)) - NetWorthOld) + punish
-        if self.state == 50:
+        if self.state == 41:
             self.done = True
             
-        return np.array([self.state, self.y, self.cash, self.stock]) , self.reward2, self.done
+        return np.array([self.gradient, self.y, self.cash, self.stock]) , self.reward2, self.done
         
     def reset(self):
         self.state = 0
         self.done = False
         self.reward2 = 0
-        self.y = df2[0] 
+        self.y = 1 
         self.gradient = 0
-        self.cash = 5*40
+        self.cash = 5
         self.stock = 0
-        return np.array([self.state, self.y, self.cash, self.stock])
+        return np.array([self.gradient, self.y, self.cash, self.stock])
     def result(self):
         def EvalFunc(x):
-            #return (np.sin(x/20*2*np.pi)+1)
-            return df2[self.state]
+            # return (np.sin(x/20*2*np.pi)+1)
+            return np.sin(2*np.pi*x/40) + np.sin(2*2*np.pi*x/40) + 3 + np.sin(4*2*np.pi*x/40)
+            
+        return self.cash + self.stock*EvalFunc(self.state-1)
+    def __init__(self):
+        self.state = 0
+        self.done = False
+        self.y = 1
+        self.gradient = 0
+        self.cash = 5
+        self.NetWorth = self.cash
+        self.stock = 0
+        self.reward2 = 0
+    def DO(self,action):
+        def EvalFunc(x):
+            return (np.sin(x/20*2*np.pi)+1)
+            # return np.sin(2*np.pi*x/40) + np.sin(2*2*np.pi*x/40)+ 3 + np.sin(4*2*np.pi*x/40)
+        punish = 0
+        NetWorthOld = self.cash + self.stock*EvalFunc(self.state)
+        self.y = EvalFunc(self.state)
+        self.gradient = EvalFunc((self.state+1)) - EvalFunc(self.state)
+        if action == 0 and self.cash > EvalFunc(self.state): #buy
+            self.stock += 1
+            self.cash -= EvalFunc(self.state)
+        elif action == 1 and self.stock > 0: #sell
+            self.stock -= 1
+            self.cash += EvalFunc(self.state)
+        elif action == 2 or self.cash <= EvalFunc(self.state) or self.stock <= 0:
+            self.reward1 = 0
+            if action != 2:
+                punish = -1
+        else:
+            print('error')
+        self.state += 1
+        self.reward2 = ((self.cash + self.stock*EvalFunc(self.state)) - NetWorthOld) + punish
+        if self.state == 41:
+            self.done = True
+            
+        return np.array([self.gradient, self.y, self.cash, self.stock]) , self.reward2, self.done
+        
+    def reset(self):
+        self.state = 0
+        self.done = False
+        self.reward2 = 0
+        self.y = 1 
+        self.gradient = 0
+        self.cash = 5
+        self.stock = 0
+        return np.array([self.gradient, self.y, self.cash, self.stock])
+    def result(self):
+        def EvalFunc(x):
+            return (np.sin(x/20*2*np.pi)+1)
+            # return np.sin(2*np.pi*x/40) + np.sin(2*2*np.pi*x/40) + 3 + np.sin(4*2*np.pi*x/40)
+            
         return self.cash + self.stock*EvalFunc(self.state-1)
 
 def q_learning_keras(env, num_episodes=2000):
@@ -109,9 +167,9 @@ def q_learning_keras(env, num_episodes=2000):
     return model
 
 #Creating the environment
-env = nchain()
+env = nchain2()
 #Start the learning of the model
-model = q_learning_keras(env,5000)
+model = q_learning_keras(env,2000)
 #Using the model to show how it works:
 CASH = []
 STOCK = []
@@ -133,7 +191,5 @@ plt.plot(REWARD)
 plt.plot(NETWORTH)
 plt.plot(ACTION)
 plt.legend(['cash','reward','net worth','action'])
-plt.show()
-plt.plot(STOCK)
 plt.show()
 

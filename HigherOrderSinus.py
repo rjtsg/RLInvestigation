@@ -30,7 +30,7 @@ class nchain:
         self.done = False
         self.y = 1
         self.gradient = 0
-        self.cash = 5
+        self.cash = 10
         self.NetWorth = self.cash
         self.stock = 0
         self.reward2 = 0
@@ -67,7 +67,7 @@ class nchain:
         self.reward2 = 0
         self.y = 1 
         self.gradient = 0
-        self.cash = 5
+        self.cash = 10
         self.stock = 0
         return np.array([self.gradient, self.y, self.cash, self.stock])
     def result(self):
