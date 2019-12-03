@@ -47,6 +47,7 @@ for M in range(episodes):
   while not done:
     action = mu_model.predict(np.array([observation])) + np.random.uniform(-2,2)
     # print(action)
+    env.render()
     new_observation, reward, done, _ = env.step(action[0])
     ReplayBuffer = np.vstack((ReplayBuffer,np.array([observation,action,reward, new_observation])))
     ReplayBuffer = np.delete(ReplayBuffer,0,axis=0)
