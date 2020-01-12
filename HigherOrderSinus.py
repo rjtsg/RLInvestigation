@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 t = np.arange(0, 40, 1)
 # Create a sine wave with multiple frequencies(1 Hz, 2 Hz and 4 Hz)
 a = np.cos(2*np.pi*t/40) + np.cos(2*2*np.pi*t/40)+ 3 + np.cos(4*2*np.pi*t/40) 
-a = np.random.normal(a,0.5)
 # Plot the original sine wave using inverse Fourier transform
 plt.plot(t, a)
 plt.title("Sine wave plotted using inverse Fourier transform")
@@ -226,7 +225,7 @@ def q_learning_keras(env, num_episodes=2000):
 #Creating the environment
 env = nchain2()
 #Start the learning of the model
-model = q_learning_keras(env,1000)
+model = q_learning_keras(env,1500)
 #Using the model to show how it works:
 CASH = []
 STOCK = []
