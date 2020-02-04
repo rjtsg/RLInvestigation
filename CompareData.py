@@ -1,9 +1,4 @@
-# import numpy as np
-# from keras.models import Sequential
-# from keras.layers import Dense, InputLayer
 import matplotlib.pylab as plt
-# import pandas as pd 
-
 from Create_train_test_data import CreateTestTrainData
 from TradeEnvironments import TradingEnvironment
 
