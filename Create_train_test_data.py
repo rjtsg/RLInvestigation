@@ -15,7 +15,7 @@ class CreateTestTrainData:
                 self.train_data.loc[datecheck] = self.df.iloc[i]
         self.train_data = self.train_data.iloc[::-1]
         self.xaxis_train = range(0,len(self.train_data))
-        return self.train_data['Close']
+        return self.train_data['Close'], self.xaxis_train
         
     
     def TestData(self,TestYear='2005'):
@@ -25,7 +25,7 @@ class CreateTestTrainData:
                 self.test_data.loc[datecheck] = self.df.iloc[i]
         self.test_data = self.test_data.iloc[::-1]
         self.xaxis_test = range(0,len(self.test_data))
-        return self.test_data['Close']
+        return self.test_data['Close'], self.xaxis_test
         
     
     def PLOTTER(self):
@@ -38,8 +38,8 @@ class CreateTestTrainData:
         
 
 
-Test = CreateTestTrainData()
-training = Test.TrainData('2004')
-testing = Test.TestData('2005')
-Test.PLOTTER()
-print(training)
+# Test = CreateTestTrainData()
+# training = Test.TrainData('2004')
+# testing = Test.TestData('2005')
+# Test.PLOTTER()
+# print(training)

@@ -33,7 +33,7 @@ class TradingEnvironment:
         self.stock_price = self.stock_data[self.day]
         NetWorthNew = self.cash + self.stock*self.stock_price
         self.reward = NetWorthNew - NetWorthOld
-        if self.day == self.end:
+        if self.day == self.end-1:
             self.done = True
         
         return np.array([self.day, self.stock_price, self.cash, self.stock]), self.reward, self.done
