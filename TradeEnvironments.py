@@ -39,7 +39,7 @@ class TradingEnvironment:
         if self.day == self.end-1:
             self.done = True
         
-        self.info = [self.no_money, self.no_stock]
+        self.info = [self.no_money, self.no_stock, NetWorthNew]
 
         return np.array([self.day, self.stock_price, self.cash, self.stock]), self.reward, self.done, self.info
     
@@ -53,6 +53,6 @@ class TradingEnvironment:
         self.no_stock = 0
         self.done = False
         self.reward = 0
-        self.info = [0, 0]
+        self.info = [0, 0, 0]
         return np.array([self.day, self.stock_price, self.cash, self.stock]), self.reward, self.done
     
