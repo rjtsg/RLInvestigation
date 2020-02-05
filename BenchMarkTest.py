@@ -9,7 +9,7 @@ train_data, x = DataCreation.TrainData()
 env = TradingEnvironment(train_data)
 Agent = DeepQKerasSR()
 
-num_episodes = 100
+num_episodes = 1000
 tot_reward_list = []
 no_stock_list = []
 no_money_list = []
@@ -38,7 +38,7 @@ dataframe_csv = {'Reward': tot_reward_list,
                  'No stock trade': no_stock_list,
                  'Net worth end game': NetWorth_list}
 df = pd.DataFrame(dataframe_csv)
-df.to_csv('BencchMark2.csv', index=False)
+df.to_csv('BenchMark3.csv', index=False)
 
 
 plt.plot(tot_reward_list)

@@ -25,7 +25,7 @@ class TradingEnvironment:
             self.stock -= 1
             self.cash += self.stock_price
         elif action == 2 or self.cash <= self.stock_price or self.stock <= 0:
-            self.reward1 = 0
+            # punish = -5
             if action == 0:
                 self.no_money += 1
             elif action == 1:
