@@ -17,6 +17,7 @@ class TradingEnvironment:
 
     def step(self, action):
         NetWorthOld = self.cash + self.stock*self.stock_price
+        # punish = 0
         if action == 0 and self.cash > self.stock_price: #buy
             self.stock += 1
             self.cash -= self.stock_price
@@ -25,18 +26,22 @@ class TradingEnvironment:
             self.cash += self.stock_price
         elif action == 2 or self.cash <= self.stock_price or self.stock <= 0:
             self.reward1 = 0
-            if action != 2:
+            if action == 0:
                 self.no_money += 1
+            elif action == 1:
                 self.no_stock += 1
+                
         #Update day
         self.day += 1
         self.stock_price = self.stock_data[self.day]
         NetWorthNew = self.cash + self.stock*self.stock_price
-        self.reward = NetWorthNew - NetWorthOld
+        self.reward = NetWorthNew - NetWorthOld #+ punish
         if self.day == self.end-1:
             self.done = True
         
-        return np.array([self.day, self.stock_price, self.cash, self.stock]), self.reward, self.done
+        self.info = [self.no_money, self.no_stock]
+
+        return np.array([self.day, self.stock_price, self.cash, self.stock]), self.reward, self.done, self.info
     
     def reset(self):
         self.start = 0
@@ -48,5 +53,6 @@ class TradingEnvironment:
         self.no_stock = 0
         self.done = False
         self.reward = 0
+        self.info = [0, 0]
         return np.array([self.day, self.stock_price, self.cash, self.stock]), self.reward, self.done
     

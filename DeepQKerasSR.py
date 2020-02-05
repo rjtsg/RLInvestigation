@@ -20,7 +20,7 @@ class DeepQKerasSR:
             action = np.argmax(self.model.predict(np.array([observation])))
         return action
 
-    def Train(self, action,observation, new_observation, reward, done):
+    def Train(self, action, observation, new_observation, reward, done):
         target = reward + self.y * np.amax(self.model.predict(np.array([new_observation])))*(1-int(done))
         target_vec = self.model.predict(np.array([observation]))[0]
         target_vec[action] = target
