@@ -11,7 +11,7 @@ class DeepQKerasSR:
         self.model.add(Dense(Nodes, activation='sigmoid')) #second layer
         self.model.add(Dense(n_actions, activation='linear'))
         # self.model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-        self.model.compile(loss='mse', optimizer=Adam(lr=0.001), metrics=['mae'])
+        self.model.compile(loss='mse', optimizer=Adam(lr=0.0001), metrics=['mae'])
         self.y = 0.95
         self.eps = 0.5
         self.decay_factor = 0.999
