@@ -1,15 +1,19 @@
 import matplotlib.pylab as plt
 import pandas as pd
+import os
 from Create_train_test_data import CreateTestTrainData
 from TradeEnvironments import TradingEnvironment
 from DeepQKerasSR import DeepQKerasSR
+from AC_keras_phil import ACKeras
 
 DataCreation = CreateTestTrainData()
 train_data, x = DataCreation.TrainData()
 env = TradingEnvironment(train_data)
-Agent = DeepQKerasSR()
+Agent = DeepQKerasSR(24,3)
+# Agent = ACKeras(0.00001,0.00005,gamma=0.99,n_actions=3,
+#     layer1_size=1024,layer2_size=512,input_dims=4)
 
-num_episodes = 1000
+num_episodes = 2000
 tot_reward_list = []
 no_stock_list = []
 no_money_list = []
@@ -20,13 +24,14 @@ for i in range(num_episodes):
     reward_score = 0
     while not done:
         action = Agent.Action(observation)
-        
+        # print(action)
         new_observation, reward, done, info = env.step(action)
         
         Agent.Train(action, observation, new_observation, reward, done)
         
         reward_score += reward
         observation = new_observation
+
     tot_reward_list.append(reward_score)
     NetWorth_list.append(info[2])
     no_stock_list.append(info[1])
@@ -37,9 +42,12 @@ dataframe_csv = {'Reward': tot_reward_list,
                  'No cash trade': no_money_list,
                  'No stock trade': no_stock_list,
                  'Net worth end game': NetWorth_list}
-df = pd.DataFrame(dataframe_csv)
-df.to_csv('BenchMark3.csv', index=False)
 
+
+df = pd.DataFrame(dataframe_csv)
+os.chdir('Trading_data')
+df.to_csv('Trading-DQKSR-24-3000-quiter-second_layer-applied_lr_0.001-V1.csv', index= False)
+os.chdir('..')
 
 plt.plot(tot_reward_list)
 plt.xlabel('Number of episodes')

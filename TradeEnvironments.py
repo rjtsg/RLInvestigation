@@ -28,8 +28,10 @@ class TradingEnvironment:
             # punish = -5
             if action == 0:
                 self.no_money += 1
+                self.done = True
             elif action == 1:
                 self.no_stock += 1
+                self.done = True
                 
         #Update day
         self.day += 1

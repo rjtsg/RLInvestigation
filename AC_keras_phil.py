@@ -34,6 +34,7 @@ class ACKeras(object):
 
         actor = Model(input=[input,delta], output=[probs])
         actor.compile(optimizer=Adam(lr=self.alpha),loss=custom_loss)
+        # actor.compile(optimizer=Adam(lr=self.alpha),loss='mean_squared_error')
 
         critic = Model(input=[input], output=[values])
         critic.compile(optimizer=Adam(lr=self.beta),loss='mean_squared_error')
