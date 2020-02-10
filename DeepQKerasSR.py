@@ -9,7 +9,7 @@ class DeepQKerasSR:
         self.model = Sequential()
         self.model.add(InputLayer(batch_input_shape=(1, input_dims)))
         self.model.add(Dense(layer1_size, activation='sigmoid'))
-        if layer2_size != 0:
+        if layer2_size != 0: #Such that also 1 layer can be used
             self.model.add(Dense(layer2_size, activation='sigmoid')) #second layer
         self.model.add(Dense(n_actions, activation='linear'))
         # self.model.compile(loss='mse', optimizer='adam', metrics=['mae'])
