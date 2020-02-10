@@ -5,17 +5,16 @@ import os
 
 data = []
 data_smooth = []
-N = 50
-save_file = False
-save_name = 'Trading-DQKSR-xx_nodes-2000-lr_0.0001-quiter-filtered.png'
-plt.title('Trading DQKSR comparison filtered\n Environment: Quiter\n LR: 0.0001')
+N = 5
+save_file = True
+save_name = 'Trading-ACKeras-1024_512_nodes-100-lr_xx_xx-normal-filtered-V2.png'
+plt.title('Trading ACKeras comparison filtered\n Environment: Normal\n Nodes: 1024-512')
 plt.xlabel('Number of episodes')
 plt.ylabel('Reward')
-LEGEND = ['24 nodes', '48 nodes', '100 nodes']
+LEGEND = ['lr 0.001-0.005', 'lr 0.0001-0.0005']
 
-data.append(pd.read_csv('Trading-DQKSR-24-2000-quiter-second_layer-applied_lr_0.0001-V1.csv'))
-data.append(pd.read_csv('Trading-DQKSR-48-2000-quiter-second_layer-applied_lr_0.0001-V1.csv'))
-data.append(pd.read_csv('Trading-DQKSR-100-2000-quiter-second_layer-applied_lr_0.0001-V1.csv'))
+data.append(pd.read_csv('Trading-ACKeras-1024_512-100-lr-0.001_0.005.csv'))
+data.append(pd.read_csv('Trading-ACKeras-1024_512-100-lr-0.0001_0.0005.csv'))
 
 
 
