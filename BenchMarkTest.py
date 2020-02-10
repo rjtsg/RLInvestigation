@@ -8,13 +8,13 @@ from AC_keras_phil import ACKeras
 
 DataCreation = CreateTestTrainData()
 train_data, x = DataCreation.TrainData()
-env = TradingEnvironment(train_data)
+env = TradingEnvironment(train_data, 'normal')
 Agent = DeepQKerasSR(0.0001, gamma=0.99, n_actions=3, 
-                layer1_size=100, layer2_size=100, input_dims=4)
+                layer1_size=10, layer2_size=10, input_dims=4)
 # Agent = ACKeras(0.0001,0.0001,gamma=0.99,n_actions=3,
 #     layer1_size=100,layer2_size=500,input_dims=4)
 
-num_episodes = 1000
+num_episodes = 100
 tot_reward_list = []
 no_stock_list = []
 no_money_list = []

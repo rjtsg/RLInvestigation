@@ -2,8 +2,9 @@ import pandas as pd
 import numpy as np
 
 class TradingEnvironment:
-    def __init__(self, stock_data):
+    def __init__(self, stock_data, env_type='normal'):
         self.stock_data = stock_data
+        self.env_type = env_type
         self.observation = 0
         self.done = False
         self.start = 0
@@ -15,9 +16,13 @@ class TradingEnvironment:
         self.no_money = 0
         self.no_stock = 0
 
+        types = ['normal', 'quiter', 'punish'] #all possible environment types
+        assert self.env_type in types, 'Environment type does not exist!'
+
     def step(self, action):
         NetWorthOld = self.cash + self.stock*self.stock_price
-        # punish = 0
+        if self.env_type == 'punish':
+            punish = 0
         if action == 0 and self.cash > self.stock_price: #buy
             self.stock += 1
             self.cash -= self.stock_price
@@ -25,19 +30,26 @@ class TradingEnvironment:
             self.stock -= 1
             self.cash += self.stock_price
         elif action == 2 or self.cash <= self.stock_price or self.stock <= 0:
-            # punish = -5
+            if self.env_type == 'punish':
+                punish = -5
             if action == 0:
                 self.no_money += 1
-                self.done = True
+                if self.env_type == 'quiter':
+                    self.done = True
             elif action == 1:
                 self.no_stock += 1
-                self.done = True
+                if self.env_type == 'quiter':
+                    self.done = True
                 
         #Update day
         self.day += 1
         self.stock_price = self.stock_data[self.day]
         NetWorthNew = self.cash + self.stock*self.stock_price
-        self.reward = NetWorthNew - NetWorthOld #+ punish
+        if self.env_type == 'punish':
+            self.reward = NetWorthNew - NetWorthOld + punish
+        else:
+            self.reward = NetWorthNew - NetWorthOld
+
         if self.day == self.end-1:
             self.done = True
         
