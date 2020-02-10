@@ -5,18 +5,19 @@ import os
 
 data = []
 data_smooth = []
-N = 100
-save_file = False
-save_name = 'CartPole-DQKSR-5000-filtered.png'
+N = 50
+save_file = True
+save_name = 'CartPole-DQKSR-10_nodes-5000-multiple-filtered.png'
 plt.title('Cartpole DQKSR comparison filtered')
 plt.xlabel('Number of episodes')
 plt.ylabel('Reward')
-LEGEND = ['5 nodes','10 nodes', '15 nodes']
+LEGEND = ['Run 1', 'Run 2', 'Run 3', 'Run 4', 'Run 5']
 
-data.append(pd.read_csv('Cartpole-DQKSR-5-5000.csv'))
-data.append(pd.read_csv('Cartpole-DQKSR-10-5000.csv'))
-data.append(pd.read_csv('Cartpole-DQKSR-15-5000.csv'))
-
+data.append(pd.read_csv('Cartpole-DQKSR-10-5000-1.csv'))
+data.append(pd.read_csv('Cartpole-DQKSR-10-5000-2.csv'))
+data.append(pd.read_csv('Cartpole-DQKSR-10-5000-3.csv'))
+data.append(pd.read_csv('Cartpole-DQKSR-10-5000-4.csv'))
+data.append(pd.read_csv('Cartpole-DQKSR-10-5000-5.csv'))
 
 for i in range(len(data)):
     data_smooth.append(np.convolve(data[i]['Reward'], np.ones((N,))/N, mode='valid'))
