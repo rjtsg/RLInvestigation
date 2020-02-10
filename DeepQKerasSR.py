@@ -4,15 +4,17 @@ from keras.layers import Dense, InputLayer
 from keras.optimizers import Adam
 
 class DeepQKerasSR:
-    def __init__(self,Nodes=100, n_actions=3):
+    def __init__(self, alpha, gamma=0.99, n_actions=3, 
+                layer1_size=100, layer2_size=100, input_dims=4):
         self.model = Sequential()
-        self.model.add(InputLayer(batch_input_shape=(1, 4)))
-        self.model.add(Dense(Nodes, activation='sigmoid'))
-        self.model.add(Dense(Nodes, activation='sigmoid')) #second layer
+        self.model.add(InputLayer(batch_input_shape=(1, input_dims)))
+        self.model.add(Dense(layer1_size, activation='sigmoid'))
+        if layer2_size != 0:
+            self.model.add(Dense(layer2_size, activation='sigmoid')) #second layer
         self.model.add(Dense(n_actions, activation='linear'))
         # self.model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-        self.model.compile(loss='mse', optimizer=Adam(lr=0.0001), metrics=['mae'])
-        self.y = 0.95
+        self.model.compile(loss='mse', optimizer=Adam(lr=alpha), metrics=['mae'])
+        self.y = gamma
         self.eps = 0.5
         self.decay_factor = 0.999
         self.n_actions = n_actions
