@@ -2,6 +2,7 @@ import matplotlib.pylab as plt
 import pandas as pd
 import os
 import re
+import gym
 from Create_train_test_data import CreateTestTrainData
 from TradeEnvironments import TradingEnvironment
 from DeepQKerasSR import DeepQKerasSR
@@ -21,4 +22,9 @@ class SetupStudyParameters:
                 EnvRex = re.compile(r'\w*')
                 GROUPS = EnvRex.findall(self.Environment_type)
                 print(GROUPS)
+                if GROUPS.group[0] == 'Trading':
+                    #Build trading env
+                    pass
+                elif GROUPS.group[0] == 'CartPole':
+                    env = gym.make('CartPole-v0')
 
