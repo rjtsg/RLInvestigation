@@ -3,7 +3,7 @@ import matplotlib.pylab as plt
 import pandas as pd 
 
 class CreateTestTrainData:
-    def __init__(self, TrainYear='2004', TestYear='2005'):
+    def __init__(self):
         self.df = pd.read_excel('AXPData.xlsx')
         self.test_data = pd.DataFrame(data=None, columns=self.df.columns)
         self.train_data = pd.DataFrame(data=None, columns=self.df.columns)
