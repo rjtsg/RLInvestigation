@@ -78,6 +78,7 @@ class SetupStudyParameters:
             save_name = save_name + '-{}-'.format(self.learning_rate[0])
         elif self.Agent_type == 'ACKeras':
             save_name = save_name + '-{}_{}-'.format(self.learning_rate[0], self.learning_rate[1])
+        save_name = save_name + '{}-'.format(self.discount[0])
         save_name = save_name + '{}.csv'.format(self.num_episodes)
         df = pd.DataFrame(dataframe_csv)
         if self.env_type == 'Trading':
@@ -88,6 +89,7 @@ class SetupStudyParameters:
             os.chdir('CartPole_data')
             df.to_csv(save_name , index= False)
             os.chdir('..')
+        print('Saved file: ', save_name)
 
         
                     
