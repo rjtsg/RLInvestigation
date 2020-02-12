@@ -91,7 +91,7 @@ class SetupStudyParameters:
 
         
                     
-Run = SetupStudyParameters('Trading-2014AXP-quiter', 'DQKSR', [10,10],[0.0001],
-                            [0.99],10)
-Run.StartTraining()
-Run.CreateSaveFile()
+# Run = SetupStudyParameters('Trading-2014AXP-quiter', 'DQKSR', [10,10],[0.0001],
+#                             [0.99],10)
+# Run.StartTraining()
+# Run.CreateSaveFile()
