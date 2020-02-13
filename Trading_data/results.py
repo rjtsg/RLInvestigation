@@ -6,18 +6,19 @@ import os
 
 data = []
 data_smooth = []
-N = 10
+N = 50
 save_file = False
 save_name = 'Trading-ACKeras-1024_512_nodes-100-lr_xx_xx-normal-filtered-V2.png'
-plt.title('Trading ACKeras comparison filtered\n Environment: Normal\n Nodes: 1024-512')
+plt.title('Trading DQKSR comparison filtered\n Environment: Normal\n lr:0.0001, Discount: 0.99')
 plt.xlabel('Number of episodes')
 plt.ylabel('Reward')
-LEGEND = ['lr 0.001-0.005', 'lr 0.0001-0.0005']
+LEGEND = ['nodes 100-100', 'nodes 50-100','nodes 100-25', 'nodes 50-10']
 
 data.append(pd.read_csv('Trading-2014AXP-normal-DQKSR-100_100-0.0001-0.99-500.csv'))
-data.append(pd.read_csv('Trading-2014AXP-normal-DQKSR-100_50-0.0001-0.99-500.csv'))
-
-
+data.append(pd.read_csv('Trading-2014AXP-normal-DQKSR-50_100-0.0001-0.99-500.csv'))
+data.append(pd.read_csv('Trading-2014AXP-normal-DQKSR-100_25-0.0001-0.99-500.csv'))
+data.append(pd.read_csv('Trading-2014AXP-normal-DQKSR-50_10-0.0001-0.99-500.csv'))
+# data.append(pd.read_csv('Trading-2014AXP-normal-DQKSR-100_5-0.0001-0.99-500.csv'))
 
 for i in range(len(data)):
     data_smooth.append(np.convolve(data[i]['Reward'], np.ones((N,))/N, mode='valid'))
@@ -55,8 +56,8 @@ fig = plt.figure()
 ax = fig.gca(projection='3d')
 surf = ax.plot_surface(XX,YY,matrix_100_average, cmap = 'viridis')
 fig.colorbar(surf, shrink=0.5, aspect=5)
-plt.xlabel('Fisrt layer nodes')
-plt.ylabel('Second layer nodes')
+plt.ylabel('Fisrt layer nodes')
+plt.xlabel('Second layer nodes')
 ax.set_zlabel('Average reward of last 100 values')
-plt.title('DQKSR\nEnv: normal, eps: 500\ndiscout: 0.99, lr: 0.0001')
+plt.title('ACKeras\nEnv: normal, eps: 500\ndiscout: 0.99, lr: 0.0001-0.0001')
 plt.show()
