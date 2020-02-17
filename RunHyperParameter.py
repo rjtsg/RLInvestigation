@@ -10,7 +10,7 @@ Agent_type = ['DQKSR', 'ACKeras']
 layer_size = [[100], [50]]
 learning_rate = [[0.0001], [0.0001]] #with DQKSR only the first one matters
 discount = [0.99]
-num_episodes = [100]
+num_episodes = [10]
 
 Environment_types = []
  
@@ -38,10 +38,13 @@ for i in Environment_types:
                         y = [y]
                         for eps in num_episodes:
                             OPS.CheckAndQuit()
+
                             Run = SetupStudyParameters(i,m,layers,
                                                 lrs, y, eps)
                             Run.StartTraining()
                             Run.CreateSaveFile()
+
+OPS.OperationDone()
 
 
 

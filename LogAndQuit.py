@@ -23,6 +23,9 @@ class OperativeState:
             txt_file.close()
             os.remove(self.name)
             raise EnvironmentError
+    
+    def OperationDone(self):
+        os.remove(self.name)
 
 
 
