@@ -1,4 +1,5 @@
 from HyperParameterTweaking import SetupStudyParameters
+from LogAndQuit import OperativeState
 
 #inputs:
 Environment = ['Trading']
@@ -9,11 +10,11 @@ Agent_type = ['DQKSR', 'ACKeras']
 layer_size = [[100], [50]]
 learning_rate = [[0.0001], [0.0001]] #with DQKSR only the first one matters
 discount = [0.99]
-num_episodes = [250]
+num_episodes = [100]
 
 Environment_types = []
  
- 
+OPS = OperativeState() 
 for i in Environment:
     if i == 'Trading':
         for j in Trading_year:
@@ -36,6 +37,7 @@ for i in Environment_types:
                     for y in discount:
                         y = [y]
                         for eps in num_episodes:
+                            OPS.CheckAndQuit()
                             Run = SetupStudyParameters(i,m,layers,
                                                 lrs, y, eps)
                             Run.StartTraining()
