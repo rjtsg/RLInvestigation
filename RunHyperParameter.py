@@ -6,15 +6,15 @@ Environment = ['Trading']
 environment_mode = ['normal']
 Trading_year = ['2014']
 Trading_ticker = ['AXP']
-Agent_type = ['DQKSR', 'ACKeras']
-layer_size = [[128,256,512,1024], [128,256,512,1024]]
-learning_rate = [[0.0001], [0.0001]] #with DQKSR only the first one matters
+Agent_type = ['ACKeras']
+layer_size = [[512], [256]]
+learning_rate = [[0.00001], [0.00005]] #with DQKSR only the first one matters
 discount = [0.99]
-num_episodes = [500]
+num_episodes = [10]
 
 Environment_types = []
  
-OPS = OperativeState() 
+# OPS = OperativeState() 
 for i in Environment:
     if i == 'Trading':
         for j in Trading_year:
@@ -37,14 +37,16 @@ for i in Environment_types:
                     for y in discount:
                         y = [y]
                         for eps in num_episodes:
-                            OPS.CheckAndQuit()
+                            # OPS.CheckAndQuit()
 
                             Run = SetupStudyParameters(i,m,layers,
                                                 lrs, y, eps)
+                            # Run.LoadAgent()
                             Run.StartTraining()
                             Run.CreateSaveFile()
+                            Run.SaveAgent()
 
-OPS.OperationDone()
+# OPS.OperationDone()
 
 
 

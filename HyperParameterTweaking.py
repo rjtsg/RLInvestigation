@@ -45,13 +45,21 @@ class SetupStudyParameters:
             print('Environment_type not understoond, check name')
             raise NameError 
         #Create and error here... something like above?
-        
+        #Create save name here already
+        self.save_name = self.Environment_type + '-' + self.Agent_type + '-'
+        self.save_name = self.save_name + '{}_{}'.format(self.layer_size[0], self.layer_size[1])
+        if self.Agent_type == 'DQKSR':
+            self.save_name = self.save_name + '-{}-'.format(self.learning_rate[0])
+        elif self.Agent_type == 'ACKeras':
+            self.save_name = self.save_name + '-{}_{}-'.format(self.learning_rate[0], self.learning_rate[1])
+        self.save_name = self.save_name + '{}-'.format(self.discount[0])
+        self.save_name = self.save_name + '{}'.format(self.num_episodes)
         ####CREATE AGENT####
         if Agent_type == 'DQKSR':
-            self.Agent = DeepQKerasSR(self.learning_rate[0], self.discount[0], self.n_actions, 
+            self.Agent = DeepQKerasSR(self.save_name,self.learning_rate[0], self.discount[0], self.n_actions, 
                 self.layer_size[0], self.layer_size[1], self.input_dims)
         elif Agent_type == 'ACKeras':
-            self.Agent = ACKeras(self.learning_rate[0],self.learning_rate[1],self.discount[0],
+            self.Agent = ACKeras(self.save_name,self.learning_rate[0],self.learning_rate[1],self.discount[0],
                 self.n_actions, self.layer_size[0],self.layer_size[1], self.input_dims)
 
     def StartTraining(self):
@@ -72,26 +80,22 @@ class SetupStudyParameters:
     def CreateSaveFile(self):
         #Save the total rewards in a csv file with appropiate naming
         dataframe_csv = {'Reward': self.tot_reward_list}
-        save_name = self.Environment_type + '-' + self.Agent_type + '-'
-        save_name = save_name + '{}_{}'.format(self.layer_size[0], self.layer_size[1])
-        if self.Agent_type == 'DQKSR':
-            save_name = save_name + '-{}-'.format(self.learning_rate[0])
-        elif self.Agent_type == 'ACKeras':
-            save_name = save_name + '-{}_{}-'.format(self.learning_rate[0], self.learning_rate[1])
-        save_name = save_name + '{}-'.format(self.discount[0])
-        save_name = save_name + '{}.csv'.format(self.num_episodes)
         df = pd.DataFrame(dataframe_csv)
         if self.env_type == 'Trading':
             os.chdir('Trading_data')
-            df.to_csv(save_name , index= False)
+            df.to_csv(self.save_name+'.csv' , index= False)
             os.chdir('..')
         elif self.env_type == 'CartPole':
             os.chdir('CartPole_data')
-            df.to_csv(save_name , index= False)
+            df.to_csv(self.save_name+'.csv' , index= False)
             os.chdir('..')
-        print('Saved file: ', save_name)
-
-        
+        print('Saved file: ', self.save_name)
+    
+    def SaveAgent(self):
+        self.Agent.SaveAgent()
+    
+    def LoadAgent(self):
+        self.Agent.LoadAgent()
                     
 # Run = SetupStudyParameters('Trading-2014AXP-quiter', 'DQKSR', [10,10],[0.0001],
 #                             [0.99],10)
