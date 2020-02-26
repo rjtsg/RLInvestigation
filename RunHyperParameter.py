@@ -14,7 +14,7 @@ num_episodes = [3000]
 
 Environment_types = []
  
-# OPS = OperativeState() 
+OPS = OperativeState() 
 for i in Environment:
     if i == 'Trading':
         for j in Trading_year:
@@ -37,7 +37,7 @@ for i in Environment_types:
                     for y in discount:
                         y = [y]
                         for eps in num_episodes:
-                            # OPS.CheckAndQuit()
+                            OPS.CheckAndQuit()
 
                             Run = SetupStudyParameters(i,m,layers,
                                                 lrs, y, eps)
@@ -46,7 +46,7 @@ for i in Environment_types:
                             Run.CreateSaveFile()
                             Run.SaveAgent()
 
-# OPS.OperationDone()
+OPS.OperationDone()
 
 
 
