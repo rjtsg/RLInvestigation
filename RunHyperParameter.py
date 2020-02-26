@@ -2,12 +2,12 @@ from HyperParameterTweaking import SetupStudyParameters
 from LogAndQuit import OperativeState
 
 #inputs:
-Environment = ['CartPole'] #Trading or CartPole
+Environment = ['Trading'] #Trading or CartPole
 environment_mode = ['normal'] #normal or quiter or punish
 Trading_year = ['2014']
 Trading_ticker = ['AXP']
 Agent_type = ['ACKeras']
-layer_size = [[512], [256]]
+layer_size = [[2048], [1024]]
 learning_rate = [[0.00001], [0.00005]] #with DQKSR only the first one matters
 discount = [0.99]
 num_episodes = [10]

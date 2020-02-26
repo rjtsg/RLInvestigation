@@ -22,7 +22,6 @@ class ACKeras(object):
     def build_actor_critic_network(self):
         input = Input(shape=(self.input_dims,))
         self.delta = Input(shape=[1])
-        print(self.delta)
         dense1 = Dense(self.fc1_dims,activation='relu')(input)
         dense2 = Dense(self.fc2_dims,activation='relu')(dense1)
         probs = Dense(self.n_actions,activation='softmax')(dense2)
