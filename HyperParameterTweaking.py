@@ -65,10 +65,15 @@ class SetupStudyParameters:
     def StartTraining(self):
         self.tot_reward_list = []
         for i in range(self.num_episodes):
-            observation, reward, done = self.env.reset()
+            if self.Environment_type == 'CartPole':
+                observation = self.env.reset()
+                done = False
+            else:
+                observation, reward, done = self.env.reset()
             reward_score = 0
             while not done:
                 action = self.Agent.Action(observation)
+                print(action)
                 new_observation, reward, done, info = self.env.step(action)
                 # print(reward.type())
                 self.Agent.Train(action, observation, new_observation, reward, done)
