@@ -73,7 +73,7 @@ class SetupStudyParameters:
             reward_score = 0
             while not done:
                 action = self.Agent.Action(observation)
-                print(action)
+                # print(action)
                 new_observation, reward, done, info = self.env.step(action)
                 # print(reward.type())
                 self.Agent.Train(action, observation, new_observation, reward, done)
