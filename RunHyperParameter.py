@@ -6,11 +6,11 @@ Environment = ['Trading']
 environment_mode = ['normal']
 Trading_year = ['2014']
 Trading_ticker = ['AXP']
-Agent_type = ['ACKeras']
+Agent_type = ['DQKSR']
 layer_size = [[512], [256]]
 learning_rate = [[0.00001], [0.00005]] #with DQKSR only the first one matters
 discount = [0.99]
-num_episodes = [10]
+num_episodes = [3000]
 
 Environment_types = []
  
