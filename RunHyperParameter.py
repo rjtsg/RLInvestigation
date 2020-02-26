@@ -10,7 +10,7 @@ Agent_type = ['ACKeras']
 layer_size = [[2048], [1024]]
 learning_rate = [[0.00001], [0.00005]] #with DQKSR only the first one matters
 discount = [0.99]
-num_episodes = [10]
+num_episodes = [2500]
 
 Environment_types = []
  
