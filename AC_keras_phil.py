@@ -2,6 +2,7 @@ from keras import backend as K
 from keras.layers import Dense, Input
 from keras.models import Model, load_model, model_from_json
 from keras.optimizers import Adam
+from keras.utils import plot_model
 import numpy as np
 import os
 
@@ -21,7 +22,8 @@ class ACKeras(object):
         
     def build_actor_critic_network(self):
         input = Input(shape=(self.input_dims,))
-        self.delta = Input(shape=[1])
+        delta = Input(shape=[1])
+        self.delta_double = delta
         dense1 = Dense(self.fc1_dims,activation='relu')(input)
         dense2 = Dense(self.fc2_dims,activation='relu')(dense1)
         probs = Dense(self.n_actions,activation='softmax')(dense2)
@@ -31,9 +33,9 @@ class ACKeras(object):
             out = K.clip(y_pred,1e-8,1-1e-8)
             log_lik = y_true*K.log(out)
 
-            return K.sum(-log_lik*self.delta)
+            return K.sum(-log_lik*delta)
 
-        actor = Model(input=[input,self.delta], output=[probs])
+        actor = Model(input=[input,delta], output=[probs])
         actor.compile(optimizer=Adam(lr=self.alpha),loss=custom_loss)
         # actor.compile(optimizer=Adam(lr=self.alpha),loss='mean_squared_error')
 
@@ -59,33 +61,33 @@ class ACKeras(object):
         critic_value = self.critic.predict(state)
 
         target = reward + self.gamma*critic_value_*(1-int(done))
-        self.delta = target - critic_value
+        delta = target - critic_value
 
         actions = np.zeros([1, self.n_actions])
         actions[np.arange(1),action] = 1
-
-        self.actor.fit([state, self.delta], actions, verbose=0)
+        # print([state, delta])
+        # print(actions)
+        self.actor.fit([state, delta], actions, verbose=0)
         self.critic.fit(state, target, verbose=0)
 
     def SaveAgent(self):
         os.chdir('Agent_data')
-        # self.actor.save(self.save_name+'_actor.json')
-        actor_json = self.actor.to_json()
-        with open(self.save_name+"_actor.json", "w") as json_file:
-            json_file.write(actor_json)
-        self.actor.save_weights(self.save_name+"_actor.h5")
+        self.actor.save(self.save_name+'_actor')
+        # actor_json = self.actor.to_json()
+        # with open(self.save_name+"_actor.json", "w") as json_file:
+        #     json_file.write(actor_json)
+        # self.actor.save_weights(self.save_name+"_actor.h5")
         self.critic.save(self.save_name+'_critic')
         self.policy.save(self.save_name+'_policy')
         os.chdir('..')
 
     def LoadAgent(self):
-        print(self.delta)
-        
+        delta = self.delta_double
         def custom_loss(y_true, y_pred):
             out = K.clip(y_pred,1e-8,1-1e-8)
             log_lik = y_true*K.log(out)
 
-            return K.sum(-log_lik*self.delta)
+            return K.sum(-log_lik*delta)
         os.chdir('Agent_data')
         self.critic = load_model(self.save_name+'_critic')
         self.policy = load_model(self.save_name+'_policy')
@@ -98,8 +100,13 @@ class ACKeras(object):
         # self.actor.load_weights(self.save_name+'_actor.h5')
         # self.actor.compile(optimizer=Adam(lr=self.alpha),loss=custom_loss)
 
-        self.actor = model_from_json(open(self.save_name+'_actor.json').read())
-        self.actor.load_weights(self.save_name+'_actor.h5')
-        self.actor.compile(optimizer=Adam(lr=self.alpha),loss=custom_loss)
+        # self.actor = model_from_json(open(self.save_name+'_actor.json').read())
+        # self.actor.load_weights(self.save_name+'_actor.h5')
+        # self.actor.compile(optimizer=Adam(lr=self.alpha),loss=custom_loss)
+
+        self.actor = load_model(self.save_name+'_actor', custom_objects={'custom_loss': custom_loss})
         
         os.chdir('..')
+        # plot_model(self.actor, to_file='AC_actor.png')
+        # print(self.actor.get_config())
+
