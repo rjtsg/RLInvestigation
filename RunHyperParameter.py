@@ -7,14 +7,14 @@ environment_mode = ['normal'] #normal or quiter or punish
 Trading_year = ['2014']
 Trading_ticker = ['AXP']
 Agent_type = ['ACKeras']
-layer_size = [[2048], [1024]]
+layer_size = [[1024], [512]]
 learning_rate = [[0.00001], [0.00005]] #with DQKSR only the first one matters
 discount = [0.99]
-num_episodes = [2500]
+num_episodes = [5000]
 
 Environment_types = []
- 
-OPS = OperativeState() 
+
+OPS = OperativeState()
 for i in Environment:
     if i == 'Trading':
         for j in Trading_year:
@@ -26,7 +26,7 @@ for i in Environment:
                     Environment_types.append(Environment_type)
     else:
         Environment_types.append(i)
-for i in Environment_types:                    
+for i in Environment_types:
     for m in Agent_type:
         for ly1 in layer_size[0]:
             for ly2 in layer_size[1]:
@@ -49,11 +49,3 @@ for i in Environment_types:
                             Run.SaveAgent()
 
 OPS.OperationDone()
-
-
-
-
-
-
-
-
