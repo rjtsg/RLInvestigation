@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
  
-
+#lala
 # Time period
 t = np.arange(0, 40, 1)
 # Create a sine wave with multiple frequencies(1 Hz, 2 Hz and 4 Hz)
