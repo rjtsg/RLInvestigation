@@ -2,15 +2,15 @@ from HyperParameterTweaking import SetupStudyParameters
 from LogAndQuit import OperativeState
 
 #inputs:
-Environment = ['Trading'] #Trading or CartPole
+Environment = ['CartPole'] #Trading or CartPole
 environment_mode = ['normal'] #normal or quiter or punish
 Trading_year = ['2014']
 Trading_ticker = ['AXP']
-Agent_type = ['DQKSR']
+Agent_type = ['DDQN']
 layer_size = [[1024], [512]]
 learning_rate = [[0.00001], [0.00005]] #with DQKSR only the first one matters
 discount = [0.99]
-num_episodes = [5000]
+num_episodes = [5]
 
 Environment_types = []
 
@@ -45,7 +45,7 @@ for i in Environment_types:
                                                 lrs, y, eps)
                             # Run.LoadAgent()
                             Run.StartTraining()
-                            Run.CreateSaveFile()
-                            Run.SaveAgent()
+                            # Run.CreateSaveFile()
+                            # Run.SaveAgent()
 
 OPS.OperationDone()

@@ -75,7 +75,7 @@ class DDQNAgent(object):
     def remember(self, state, action, reward, new_state, done):
         self.memory.store_transition(state, action, reward, new_state, done)
 
-    def choose_action(self, state):
+    def Action(self, state):
         state = state[np.newaxis, :]
         rand = np.random.random()
         if rand < self.epsilon:

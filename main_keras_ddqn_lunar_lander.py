@@ -49,3 +49,4 @@ if __name__ == '__main__':
     x = [i+1 for i in range(n_games)]
     # plotLearning(x, ddqn_scores, eps_history, filename)
     plt.plot(x,ddqn_scores)
+    plt.show()

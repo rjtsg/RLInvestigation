@@ -8,6 +8,7 @@ from Create_train_test_data import CreateTestTrainData
 from TradeEnvironments import TradingEnvironment
 from DeepQKerasSR import DeepQKerasSR
 from AC_keras_phil import ACKeras
+from ddqn_keras import DDQNAgent
 
 class SetupStudyParameters:
     def __init__(self, Environment_type, Agent_type, layer_size, 
@@ -50,6 +51,8 @@ class SetupStudyParameters:
         self.save_name = self.save_name + '{}_{}'.format(self.layer_size[0], self.layer_size[1])
         if self.Agent_type == 'DQKSR':
             self.save_name = self.save_name + '-{}-'.format(self.learning_rate[0])
+        elif self.Agent_type == 'DDQN':
+            self.save_name = self.save_name + '-{}-'.format(self.learning_rate[0])
         elif self.Agent_type == 'ACKeras':
             self.save_name = self.save_name + '-{}_{}-'.format(self.learning_rate[0], self.learning_rate[1])
         self.save_name = self.save_name + '{}-'.format(self.discount[0])
@@ -61,6 +64,9 @@ class SetupStudyParameters:
         elif Agent_type == 'ACKeras':
             self.Agent = ACKeras(self.save_name,self.learning_rate[0],self.learning_rate[1],self.discount[0],
                 self.n_actions, self.layer_size[0],self.layer_size[1], self.input_dims)
+        elif Agent_type == 'DDQN':
+            self.Agent = DDQNAgent(self.learning_rate[0], self.discount[0], self.n_actions, epsilon=1,
+                batch_size=64, input_dims=self.input_dims)
 
     def StartTraining(self):
         self.tot_reward_list = []
@@ -76,7 +82,11 @@ class SetupStudyParameters:
                 # print(action)
                 new_observation, reward, done, info = self.env.step(action)
                 # print(reward.type())
-                self.Agent.Train(action, observation, new_observation, reward, done)
+                if self.Agent_type == 'DDQN':
+                     self.Agent.remember(observation, action, reward, new_observation, int(done))
+                     self.Agent.learn()
+                else:
+                    self.Agent.Train(action, observation, new_observation, reward, done)
                 reward_score += reward
                 observation = new_observation
             self.tot_reward_list.append(reward_score)
